@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepNAS — Acceso Seguro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="wrap">
+
+    <!-- Brand -->
+    <div class="brand">
+        <div class="brand-logo">
+            <div class="brand-icon">KN</div>
+            <span class="brand-name">KEEPNAS</span>
+        </div>
+        <div class="brand-tag">Portal de Acceso Seguro &nbsp;·&nbsp; keepnas.sl</div>
+    </div>
+
+    <!-- Card -->
+    <div class="card">
+        <div class="card-head">
+            <div class="head-dot"></div>
+            <span class="head-title">Autenticación de dominio</span>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Alert: timeout -->
+            <div class="alert alert-info hidden" id="alert-timeout">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Sesión expirada por inactividad. Vuelve a iniciar sesión.
+            </div>
+
+            <!-- Alert: logout -->
+            <div class="alert alert-ok hidden" id="alert-logout">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Sesión cerrada correctamente.
+            </div>
+
+            <!-- Alert: error -->
+            <div class="alert alert-error hidden" id="alert-error">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="alert-error-text"></span>
+            </div>
+
+            <!-- Form -->
+            <form id="login-form" novalidate>
+                <div class="field">
+                    <label for="username">Usuario</label>
+                    <div class="inp-wrap">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <input type="text" id="username" name="username" placeholder="usuario" autocomplete="username" required>
+                    </div>
+                    <div class="hint">// sin prefijo de dominio</div>
+                </div>
+
+                <div class="field">
+                    <label for="password">Contraseña</label>
+                    <div class="inp-wrap">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    Acceder &nbsp;→
+                </button>
+            </form>
+
+            <div class="info-box">
+                <strong>Cómo funciona:</strong><br>
+                Tus credenciales se verifican directamente contra el dominio
+                <strong>keepnas.sl</strong> al acceder a tu carpeta.
+                No se almacena ninguna contraseña en el servidor.
+            </div>
+        </div>
+
+        <div class="card-foot">
+            <div class="vpn-status">
+                <div class="vpn-dot"></div>
+                <span id="vpn-label">¡Requiere VPN activa!</span>
+            </div>
+            <div class="wg-badge">WireGuard</div>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/login.js"></script>
+</body>
+</html>

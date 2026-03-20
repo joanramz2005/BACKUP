@@ -1,0 +1,193 @@
+/* ============================================================
+   login.css — KeepNAS Portal
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg:      #0a0c0f;
+    --surface: #111418;
+    --border:  #1e2530;
+    --accent:  #00c8ff;
+    --accent2: #0077ff;
+    --danger:  #ff4444;
+    --success: #22c55e;
+    --warn:    #f59e0b;
+    --text:    #d0dce8;
+    --muted:   #5a6a7a;
+    --mono:    'IBM Plex Mono', monospace;
+    --sans:    'IBM Plex Sans', sans-serif;
+}
+
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow: hidden;
+}
+
+/* Grid background */
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.45;
+    animation: gridPan 60s linear infinite;
+    pointer-events: none;
+}
+@keyframes gridPan { to { background-position: 40px 40px; } }
+
+/* Glow orb */
+body::after {
+    content: '';
+    position: fixed; top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Scanline */
+.scanline {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    animation: scan 8s ease-in-out infinite;
+    pointer-events: none; z-index: 1000;
+}
+@keyframes scan { 0%{top:0;opacity:0} 5%{opacity:.5} 95%{opacity:.5} 100%{top:100vh;opacity:0} }
+
+/* Wrapper */
+.wrap {
+    position: relative; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 2rem; gap: 2rem;
+}
+
+/* ── Brand ── */
+.brand { text-align: center; animation: fadeDown .6s ease both; }
+.brand-logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
+.brand-icon {
+    width: 44px; height: 44px;
+    border: 2px solid var(--accent); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--accent);
+    box-shadow: 0 0 20px rgba(0,200,255,.2), inset 0 0 10px rgba(0,200,255,.05);
+}
+.brand-name { font-family: var(--mono); font-size: 22px; font-weight: 600; letter-spacing: 3px; color: #fff; }
+.brand-tag  { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+/* ── Card ── */
+.card {
+    width: 100%; max-width: 420px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    overflow: hidden;
+    animation: fadeUp .6s ease .1s both;
+    box-shadow: 0 0 60px rgba(0,0,0,.5), 0 0 0 1px rgba(0,200,255,.04);
+}
+
+.card-head {
+    padding: 16px 28px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(90deg, rgba(0,200,255,.04), transparent);
+}
+.head-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 8px var(--accent);
+    animation: blink 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.head-title { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+.card-body { padding: 30px 28px; }
+
+/* ── Alerts ── */
+.alert {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 11px 14px; border-radius: 3px; margin-bottom: 18px;
+    font-size: 13px; line-height: 1.5;
+}
+.alert svg { flex-shrink: 0; margin-top: 1px; }
+.alert-error { background: rgba(255,68,68,.08);  border: 1px solid rgba(255,68,68,.3);  color: #ff8888; }
+.alert-info  { background: rgba(0,200,255,.07);  border: 1px solid rgba(0,200,255,.25); color: var(--accent); }
+.alert-ok    { background: rgba(34,197,94,.08);  border: 1px solid rgba(34,197,94,.25); color: #4ade80; }
+.alert.hidden { display: none; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+.alert.shake { animation: shake .4s ease; }
+
+/* ── Fields ── */
+.field { margin-bottom: 18px; }
+.field label {
+    display: block;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 7px;
+}
+.inp-wrap { position: relative; }
+.inp-wrap svg {
+    position: absolute; left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted); pointer-events: none; transition: color .2s;
+}
+.inp-wrap:focus-within svg { color: var(--accent); }
+.field input {
+    width: 100%; padding: 11px 13px 11px 40px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+    color: var(--text); font-family: var(--mono); font-size: 13px; outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+.field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,200,255,.1); }
+.hint { margin-top: 5px; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+/* ── Submit button ── */
+.btn-submit {
+    width: 100%; padding: 12px;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none; border-radius: 3px; color: #fff;
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: opacity .2s, transform .1s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(0,119,255,.3);
+    position: relative; overflow: hidden;
+}
+.btn-submit:hover  { opacity: .9; box-shadow: 0 4px 28px rgba(0,200,255,.4); }
+.btn-submit:active { transform: scale(.98); }
+.btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+.btn-submit.loading::after {
+    content: '';
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,.3); border-top-color: #fff;
+    border-radius: 50%; animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+/* ── Info box ── */
+.info-box {
+    margin-top: 16px; padding: 12px 14px;
+    background: rgba(0,200,255,.04); border: 1px solid rgba(0,200,255,.12); border-radius: 3px;
+    font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.7;
+}
+.info-box strong { color: var(--text); }
+
+/* ── Card footer ── */
+.card-foot {
+    padding: 12px 28px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+}
+.vpn-status { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.vpn-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 6px var(--success); }
+.wg-badge {
+    margin-left: auto; padding: 3px 8px;
+    background: rgba(0,200,255,.07); border: 1px solid rgba(0,200,255,.2);
+    border-radius: 2px; font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 1px;
+}
+
+/* ── Animations ── */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:none} }

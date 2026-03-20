@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepNAS — Administración</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <a href="dashboard.html" class="header-brand">
+        <div class="header-brand-icon">KN</div>
+        <span class="header-brand-name">KEEPNAS</span>
+    </a>
+    <div class="header-sep"></div>
+    <span class="admin-badge">PANEL ADMIN</span>
+    <div class="header-spacer"></div>
+    <a href="dashboard.html" class="btn-nav">← Portal</a>
+    <button class="btn-nav btn-nav-danger" id="btn-logout">Cerrar sesión</button>
+</header>
+
+<div class="page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Gestión</div>
+            <div class="sidebar-item active" data-tab="users">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Usuarios
+            </div>
+            <div class="sidebar-item" data-tab="add">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                Añadir usuario
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Info sesión</div>
+            <div class="sidebar-meta" id="admin-user-label">–</div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TAB: USUARIOS -->
+        <div class="tab-panel active" id="tab-users">
+            <div class="panel-head">
+                <div class="panel-title">Usuarios registrados</div>
+                <div class="panel-actions">
+                    <span class="count-badge" id="user-count">0 usuarios</span>
+                    <button class="btn btn-primary" id="btn-goto-add">+ Añadir usuario</button>
+                </div>
+            </div>
+
+            <div class="banner banner-error hidden" id="users-banner-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="users-banner-error-text"></span>
+            </div>
+            <div class="banner banner-ok hidden" id="users-banner-ok">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span id="users-banner-ok-text"></span>
+            </div>
+
+            <div class="table-wrap">
+                <table class="data-table" id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Ruta SMB</th>
+                            <th>Estado</th>
+                            <th>Notas</th>
+                            <th>Creado</th>
+                            <th style="text-align:right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                        <tr class="loading-row"><td colspan="6"><span class="spinner"></span>Cargando…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: AÑADIR USUARIO -->
+        <div class="tab-panel" id="tab-add">
+            <div class="panel-head">
+                <div class="panel-title">Añadir / actualizar usuario</div>
+            </div>
+
+            <div class="banner banner-error hidden" id="add-banner-error">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="add-banner-error-text"></span>
+            </div>
+            <div class="banner banner-ok hidden" id="add-banner-ok">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span id="add-banner-ok-text"></span>
+            </div>
+
+            <div class="form-card">
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Usuario (dominio)</label>
+                        <div class="inp-wrap">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <input type="text" id="add-username" placeholder="cliente01" autocomplete="off">
+                        </div>
+                        <div class="hint">Solo el nombre, sin prefijo de dominio</div>
+                    </div>
+                    <div class="field">
+                        <label>Ruta SMB (UNC)</label>
+                        <div class="inp-wrap">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            <input type="text" id="add-smb" placeholder="\\truenas\clients\cliente01" autocomplete="off">
+                        </div>
+                        <div class="hint">Déjalo vacío para usar la ruta por convención</div>
+                    </div>
+                    <div class="field">
+                        <label>Notas (opcional)</label>
+                        <div class="inp-wrap">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                            <input type="text" id="add-notes" placeholder="Empresa X" autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="btn-save-user">Guardar usuario</button>
+                    <span class="form-hint">Si el usuario ya existe, se actualizará su configuración.</span>
+                </div>
+
+                <div class="info-box">
+                    <strong>Ruta por convención:</strong>
+                    <code id="convention-path">\\truenas\clients\{usuario}</code><br>
+                    Si no registras una ruta SMB personalizada, el portal usará esa ruta automáticamente al hacer login.
+                    Usa rutas personalizadas solo cuando el cliente tenga un share distinto.
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- MODAL: CONFIRMAR ELIMINACIÓN -->
+<div class="modal-backdrop" id="modal-delete">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title" style="color:#ff8888">ELIMINAR USUARIO</span>
+            <button class="modal-close" data-close="modal-delete">✕</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:13px;color:var(--text)">¿Seguro que quieres eliminar este usuario del portal?</p>
+            <p class="confirm-name" id="delete-username"></p>
+            <p style="font-size:12px;color:var(--muted);margin-top:8px">Esto no elimina el usuario del AD ni la carpeta en TrueNAS.</p>
+        </div>
+        <div class="modal-foot">
+            <button class="btn" data-close="modal-delete">Cancelar</button>
+            <button class="btn btn-danger" id="btn-do-delete">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: EDITAR USUARIO -->
+<div class="modal-backdrop" id="modal-edit">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title">EDITAR USUARIO</span>
+            <button class="modal-close" data-close="modal-edit">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-id">
+            <div class="field" style="margin-bottom:14px">
+                <label style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Ruta SMB</label>
+                <input type="text" class="text-input" id="edit-smb" placeholder="\\truenas\clients\usuario">
+            </div>
+            <div class="field">
+                <label style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px">Notas</label>
+                <input type="text" class="text-input" id="edit-notes" placeholder="Empresa X">
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn" data-close="modal-edit">Cancelar</button>
+            <button class="btn btn-primary" id="btn-do-edit">Guardar cambios</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepNAS — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+    <a href="dashboard.html" class="header-brand">
+        <div class="header-brand-icon">KN</div>
+        <span class="header-brand-name">KEEPNAS</span>
+    </a>
+    <div class="header-sep"></div>
+    <div class="header-path" id="header-path">
+        <span class="hi">\\truenas\clients\</span><span id="header-username">…</span>
+    </div>
+    <div class="header-actions">
+        <div class="header-user">
+            <div class="header-user-dot"></div>
+            <span id="user-label">…</span>
+        </div>
+        <button class="btn-logout" id="btn-logout">Cerrar sesión</button>
+    </div>
+</header>
+
+<!-- ── LAYOUT ── -->
+<div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Navegación</div>
+            <a class="sidebar-item active" href="dashboard.html" data-dir="">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Mi carpeta
+            </a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Sesión</div>
+            <div class="sidebar-meta">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="session-time">–</span>
+            </div>
+            <div class="sidebar-meta">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                VPN 10.10.0.x
+            </div>
+        </div>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="breadcrumb" id="breadcrumb">
+                <span class="cur">Raíz</span>
+            </div>
+            <div class="toolbar-btns">
+                <button class="btn" id="btn-mkdir">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    Nueva carpeta
+                </button>
+                <button class="btn btn-primary" id="btn-upload">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                    Subir archivo
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="statsbar" id="statsbar" style="display:none">
+            <span id="stats-text"></span>
+        </div>
+
+        <!-- Content area -->
+        <div class="content">
+
+            <!-- Banner messages -->
+            <div class="banner banner-error hidden" id="banner-error">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <div>
+                    <strong>Error</strong><br>
+                    <span id="banner-error-text"></span>
+                </div>
+            </div>
+            <div class="banner banner-ok hidden" id="banner-ok">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span id="banner-ok-text"></span>
+            </div>
+
+            <!-- File table -->
+            <table class="file-table" id="file-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tamaño</th>
+                        <th>Modificado</th>
+                        <th style="text-align:right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="file-tbody">
+                    <tr class="loading-row">
+                        <td colspan="4"><span class="spinner"></span>Cargando…</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </main>
+</div>
+
+<!-- ── MODAL: SUBIR ARCHIVOS ── -->
+<div class="modal-backdrop" id="modal-upload">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title">SUBIR ARCHIVOS</span>
+            <button class="modal-close" data-close="modal-upload">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="drop-zone" id="drop-zone">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+                <p>Arrastra archivos aquí o <span>haz clic para seleccionar</span></p>
+            </div>
+            <input type="file" id="file-input" multiple style="display:none">
+            <div class="upload-list" id="upload-list"></div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn" data-close="modal-upload">Cancelar</button>
+            <button class="btn btn-primary" id="btn-do-upload" disabled>Subir archivos</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL: NUEVA CARPETA ── -->
+<div class="modal-backdrop" id="modal-mkdir">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title">NUEVA CARPETA</span>
+            <button class="modal-close" data-close="modal-mkdir">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="field-label-sm">Nombre de la carpeta</div>
+            <input type="text" class="text-input" id="mkdir-name" placeholder="nueva-carpeta" autocomplete="off">
+        </div>
+        <div class="modal-foot">
+            <button class="btn" data-close="modal-mkdir">Cancelar</button>
+            <button class="btn btn-primary" id="btn-do-mkdir">Crear</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODAL: CONFIRMAR ELIMINACIÓN ── -->
+<div class="modal-backdrop" id="modal-delete">
+    <div class="modal">
+        <div class="modal-head">
+            <span class="modal-title" style="color:#ff8888">CONFIRMAR ELIMINACIÓN</span>
+            <button class="modal-close" data-close="modal-delete">✕</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:13px;color:var(--text)">¿Seguro que quieres eliminar este elemento?</p>
+            <p class="confirm-name" id="delete-target-name"></p>
+        </div>
+        <div class="modal-foot">
+            <button class="btn" data-close="modal-delete">Cancelar</button>
+            <button class="btn btn-danger" id="btn-do-delete">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>
