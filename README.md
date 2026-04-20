@@ -29,17 +29,14 @@ keepnas/
 ├── dashboard.html      ← Explorador de archivos (HTML puro)
 ├── admin.html          ← Panel de administración (HTML puro)
 ├── web.config          ← IIS: VPN only, HTTPS, cabeceras, MIME types
-├── config.php          ← ⚙️ CONFIGURAR ANTES DE USAR
 │
 ├── css/
 │   ├── login.css       ← Estilos de login
 │   ├── dashboard.css   ← Estilos del explorador
-│   └── admin.css       ← Estilos del panel admin
 │
 ├── js/
 │   ├── login.js        ← Lógica del login (fetch → api/login.php)
 │   ├── dashboard.js    ← Explorador de archivos (fetch → api/files.php, etc.)
-│   └── admin.js        ← Panel admin (fetch → api/admin.php)
 │
 ├── api/
 │   ├── login.php       ← POST: autentica via net use, inicia sesión PHP
@@ -49,7 +46,6 @@ keepnas/
 │   ├── upload.php      ← POST: subida de archivos (multipart)
 │   ├── delete.php      ← POST: eliminar archivo/carpeta
 │   ├── mkdir.php       ← POST: crear carpeta
-│   └── admin.php       ← GET/POST: gestión de usuarios (solo admins)
 │
 ├── lib/
 │   ├── auth.php        ← Protección de sesión + VPN check
