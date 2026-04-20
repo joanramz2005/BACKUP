@@ -27,7 +27,6 @@ keepnas/
 │
 ├── login.html          ← Página de login (HTML puro)
 ├── dashboard.html      ← Explorador de archivos (HTML puro)
-├── admin.html          ← Panel de administración (HTML puro)
 ├── web.config          ← IIS: VPN only, HTTPS, cabeceras, MIME types
 │
 ├── css/
